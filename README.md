@@ -4,4 +4,4 @@ Now you know the basics and the next step is to apply the knowledge and create s
 
 ## Getting Ready
 
-[➡️ Follow this link to open project in Gitpod](https://gitpod.io/#https://github.com/codelex-io/prep-course-day-three)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/codelex-io/prep-course-day-three)
