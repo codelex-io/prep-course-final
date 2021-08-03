@@ -1,3 +1,7 @@
 vscode:
   extensions:
     - esbenp.prettier-vscode
+ports:
+  - port: 1234
+    onOpen: open-browser
+    visibility: public
