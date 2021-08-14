@@ -1,30 +1,26 @@
-import { Grid } from "./Grid";
+import configuration from "../configuration";
+import { GameField } from "./GameField";
 import { Snake } from "./Snake";
-import { Configuration, MAX_LEVEL } from "./Configuration";
 import { Cell } from "./Cell";
 
-export class Game {
-  private score: number = 0;
-  private running: boolean = false;
-  private grid: Grid;
-  private snake: Snake;
-  private configuration: Configuration;
-  private nextTick: number;
+export interface RuntimeConfiguration {
+  level: number;
+  speed: number;
+}
 
-  constructor(configuration: Configuration) {
-    this.configuration = configuration;
-    this.snake = new Snake();
-    this.grid = new Grid(this.configuration);
-    this.nextTick = 0;
-    this.running = true;
-  }
+export class Game {
+  private runtimeConfiguration: RuntimeConfiguration = {
+    level: 0,
+    speed: configuration.defaultSpeed
+  };
+  private score: number = 0;
+  private running = true;
+  private field = new GameField();
+  private snake = new Snake();
+  private nextTick = 0;
 
   getSnake(): Snake {
     return this.snake;
-  }
-
-  getConfiguration() {
-    return this.configuration;
   }
 
   shouldUpdate(time: number): boolean {
@@ -32,7 +28,7 @@ export class Game {
   }
 
   update(time: number) {
-    this.nextTick = time + this.configuration.speed;
+    this.nextTick = time + configuration.defaultSpeed;
 
     this.snake.move();
 
@@ -43,8 +39,8 @@ export class Game {
       case 1:
         this.snake.grow();
         this.score += 100;
-        this.grid.removeApple(this.snake.getHead());
-        if (this.grid.isDone()) {
+        this.field.removeApple(this.snake.getHead());
+        if (this.field.isEmpty()) {
           this.levelUp();
         }
     }
@@ -54,13 +50,13 @@ export class Game {
     const cell = this.snake.getHead();
 
     // left the play area or ate itself??
-    if (this.isOutside(cell) || this.snake.isSnake(cell)) {
+    if (this.isOutside(cell) || this.snake.isTakenBySnake(cell)) {
       // dead
       return -1;
     }
 
     // ate apple?
-    if (this.grid.isAppleInside(cell)) {
+    if (this.field.isAppleInside(cell)) {
       return 1;
     }
 
@@ -70,10 +66,10 @@ export class Game {
 
   levelUp() {
     this.score += 1000;
-    this.configuration.level++;
-    if (this.configuration.level < MAX_LEVEL) {
-      this.configuration.speed -= 7;
-      this.grid.seed();
+    this.runtimeConfiguration.level++;
+    if (this.runtimeConfiguration.level < configuration.maxLevel) {
+      this.runtimeConfiguration.speed -= 7;
+      this.field.seed();
     } else {
       this.win();
     }
@@ -88,7 +84,7 @@ export class Game {
   }
 
   isOutside(cell: Cell) {
-    const { nbCellsX, nbCellsY } = this.configuration;
+    const { nbCellsX, nbCellsY } = configuration;
     return cell.x < 0 || cell.x >= nbCellsX || cell.y < 0 || cell.y >= nbCellsY;
   }
 
@@ -96,8 +92,8 @@ export class Game {
     return this.score;
   }
 
-  getGrid(): Grid {
-    return this.grid;
+  getField(): GameField {
+    return this.field;
   }
 
   stop() {
