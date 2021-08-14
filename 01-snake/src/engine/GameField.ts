@@ -8,10 +8,10 @@ export class GameField {
 
   getApples(): Cell[] {
     return [
-      new Cell(33, 22),
-      new Cell(35, 22),
-      new Cell(37, 22),
-      new Cell(39, 22)
+      new Cell(18, 16),
+      new Cell(20, 16),
+      new Cell(22, 16),
+      new Cell(24, 16),
     ];
   }
 
