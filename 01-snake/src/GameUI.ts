@@ -1,13 +1,41 @@
 import configuration from "./configuration";
 import { Game } from "./engine/Game";
 
-const CELL_SIZE = 20;
-const SCALE = 2.0;
+const COLORS = {
+  field: "#00AA3E",
+  apples: "#F8333C",
+  brand: "#FFFFFF",
+  lines: "#E7EBEB",
+  snake: {
+    eyes: "#FFFFFF",
+    body: "#0A2E36"
+  }
+};
 
 interface CanvasConfiguration {
-  width: number;
-  height: number;
+  cellSize: number;
+  scale: number;
 }
+
+const createCanvas = (
+  canvasConfiguration: CanvasConfiguration
+): HTMLCanvasElement => {
+  const container = document.getElementById("game")!;
+  const canvas = document.createElement("Canvas") as HTMLCanvasElement;
+  container.appendChild(canvas);
+
+  const { scale, cellSize } = canvasConfiguration;
+
+  // canvas element size in the page
+  canvas.style.width = configuration.nbCellsX * cellSize + "px";
+  canvas.style.height = configuration.nbCellsY * cellSize + "px";
+
+  // image buffer size
+  canvas.width = configuration.nbCellsX * cellSize * scale;
+  canvas.height = configuration.nbCellsY * cellSize * scale;
+
+  return canvas;
+};
 
 class GameUI {
   private canvas: HTMLCanvasElement;
@@ -18,8 +46,8 @@ class GameUI {
     this.canvas = canvas;
     this.game = game;
     this.canvasConfiguration = {
-      width: canvas.width,
-      height: canvas.height
+      cellSize: 24,
+      scale: 2
     };
     requestAnimationFrame(this.draw.bind(this));
 
@@ -42,36 +70,37 @@ class GameUI {
   }
 
   drawBackground(context: CanvasRenderingContext2D) {
-    const { width, height } = this.canvasConfiguration;
+    const { width, height } = this.canvas;
 
-    context.fillStyle = "#4caf50";
+    context.fillStyle = COLORS.field;
     context.fillRect(0, 0, width, height);
   }
 
   drawBrand(context: CanvasRenderingContext2D) {
-    const { width, height } = this.canvasConfiguration;
+    const { width, height } = this.canvas;
 
-    context.font = height / 2.5 + "px Roboto";
+    context.font = height / 4 + "px Roboto";
     context.textBaseline = "middle";
     context.textAlign = "center";
-    context.fillStyle = "rgba(255,255,255,0.75)";
+    context.fillStyle = COLORS.brand;
     context.fillText("CODELEX", width / 2, height / 2);
   }
 
   drawScore(context: CanvasRenderingContext2D) {
-    context.font = 35 * SCALE + "px Arial";
+    const { scale } = this.canvasConfiguration;
+    context.font = 35 * scale + "px Arial";
     context.textAlign = "left";
     context.textBaseline = "top";
-    context.fillStyle = "rgba(255,255,255,0.75)";
-    context.fillText(game.getScore().toString(), 10 * SCALE, 10 * SCALE);
+    context.fillStyle = COLORS.lines;
+    context.fillText(this.game.getScore().toString(), 10 * scale, 10 * scale);
   }
 
   drawGrid(context: CanvasRenderingContext2D) {
-    const { width, height } = this.canvasConfiguration;
-    const { cellSize } = configuration;
-    const lineWidth = 1 * SCALE;
+    const { width, height } = this.canvas;
+    const { scale, cellSize } = this.canvasConfiguration;
+    const lineWidth = 1 * scale;
 
-    context.strokeStyle = "rgba(255,255,255,0.95)";
+    context.strokeStyle = COLORS.lines;
     context.lineWidth = lineWidth;
 
     for (let x = 0; x <= width; x += cellSize) {
@@ -90,11 +119,11 @@ class GameUI {
   }
 
   drawApples(context: CanvasRenderingContext2D) {
-    const { cellSize } = configuration;
-    const lineWidth = 1 * SCALE;
+    const { scale, cellSize } = this.canvasConfiguration;
+    const lineWidth = 1 * scale;
 
-    context.fillStyle = "#e91e63";
-    const apples = game.getField().getApples();
+    context.fillStyle = COLORS.apples;
+    const apples = this.game.getField().getApples();
     apples.forEach(cell =>
       context.fillRect(
         cellSize * cell.x + lineWidth,
@@ -107,13 +136,13 @@ class GameUI {
 
   drawSnake(context: CanvasRenderingContext2D) {
     const snake = this.game.getSnake();
-    const { cellSize } = configuration;
+    const { scale, cellSize } = this.canvasConfiguration;
     // head
-    const size = (CELL_SIZE * SCALE) / 10;
-    const offset = (CELL_SIZE * SCALE) / 3;
+    const size = (cellSize * scale) / 20;
+    const offset = (cellSize * scale) / 6;
     const x = cellSize * snake.getHead().x;
     const y = cellSize * snake.getHead().y;
-    context.fillStyle = "#111111";
+    context.fillStyle = COLORS.snake.body;
     context.fillRect(x, y, cellSize, cellSize);
     // eyes
     switch (snake.getDirection()) {
@@ -121,7 +150,7 @@ class GameUI {
         context.beginPath();
         context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
         context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
-        context.fillStyle = "white";
+        context.fillStyle = COLORS.snake.eyes;
         context.fill();
         break;
       case "Down":
@@ -135,7 +164,7 @@ class GameUI {
           2 * Math.PI,
           false
         );
-        context.fillStyle = "white";
+        context.fillStyle = COLORS.snake.eyes;
         context.fill();
         break;
       case "Right":
@@ -149,19 +178,19 @@ class GameUI {
           2 * Math.PI,
           false
         );
-        context.fillStyle = "white";
+        context.fillStyle = COLORS.snake.eyes;
         context.fill();
         break;
       case "Left":
         context.beginPath();
         context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
         context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
-        context.fillStyle = "white";
+        context.fillStyle = COLORS.snake.eyes;
         context.fill();
         break;
     }
     // tail
-    context.fillStyle = "#333333";
+    context.fillStyle = COLORS.snake.body;
     const tail = snake.getTail();
     tail.forEach(cell =>
       context.fillRect(cellSize * cell.x, cellSize * cell.y, cellSize, cellSize)
@@ -191,23 +220,10 @@ class GameUI {
   }
 }
 
-const createCanvas = (): HTMLCanvasElement => {
-  const container = document.getElementById("game")!;
-  const canvas = document.createElement("Canvas") as HTMLCanvasElement;
-  container.appendChild(canvas);
-
-  // canvas element size in the page
-  canvas.style.width = configuration.nbCellsX * configuration.cellSize + "px";
-  canvas.style.height = configuration.nbCellsY * configuration.cellSize + "px";
-
-  // image buffer size
-  canvas.width = configuration.nbCellsX * configuration.cellSize * SCALE;
-  canvas.height = configuration.nbCellsY * configuration.cellSize * SCALE;
-
-  return canvas;
-};
-
-const canvas = createCanvas();
-const game = new Game();
-
-new GameUI(canvas, game);
+new GameUI(
+  createCanvas({
+    cellSize: 24,
+    scale: 2
+  }),
+  new Game()
+);
