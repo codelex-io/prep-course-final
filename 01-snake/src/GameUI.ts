@@ -1,5 +1,5 @@
 import configuration from "./configuration";
-import { Game } from "./engine/Game";
+import { Game } from "./Game";
 
 const COLORS = {
   field: "#00AA3E",
@@ -8,8 +8,8 @@ const COLORS = {
   lines: "#E7EBEB",
   snake: {
     eyes: "#FFFFFF",
-    body: "#0A2E36",
-  },
+    body: "#0A2E36"
+  }
 };
 
 interface CanvasConfiguration {
@@ -47,7 +47,7 @@ class GameUI {
     this.game = game;
     this.canvasConfiguration = {
       cellSize: 24,
-      scale: 2,
+      scale: 2
     };
     requestAnimationFrame(this.draw.bind(this));
 
@@ -124,7 +124,7 @@ class GameUI {
 
     context.fillStyle = COLORS.apples;
     const apples = this.game.getField().getApples();
-    apples.forEach((cell) =>
+    apples.forEach(cell =>
       context.fillRect(
         cellSize * scale * cell.x + lineWidth,
         cellSize * scale * cell.y + lineWidth,
@@ -192,7 +192,7 @@ class GameUI {
     // tail
     context.fillStyle = COLORS.snake.body;
     const tail = snake.getTail();
-    tail.forEach((cell) =>
+    tail.forEach(cell =>
       context.fillRect(
         cellSize * scale * cell.x,
         cellSize * scale * cell.y,
@@ -228,7 +228,7 @@ class GameUI {
 new GameUI(
   createCanvas({
     cellSize: 24,
-    scale: 2,
+    scale: 2
   }),
   new Game()
 );

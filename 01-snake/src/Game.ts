@@ -1,7 +1,7 @@
-import configuration from "../configuration";
-import { GameField } from "./GameField";
-import { Snake } from "./Snake";
-import { Cell } from "./Cell";
+import { GameField } from "./engine/GameField";
+import { Snake } from "./engine/Snake";
+import { Cell } from "./engine/Cell";
+import configuration from "./configuration";
 
 export interface RuntimeConfiguration {
   level: number;
