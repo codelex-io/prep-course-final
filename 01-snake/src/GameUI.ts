@@ -2,15 +2,17 @@ import configuration from "./configuration";
 import { Game } from "./Game";
 
 const COLORS = {
-  field: "#00AA3E",
-  apples: "#F8333C",
-  brand: "#FFFFFF",
+  border: "#00AA3E",
+  field: "#36BC67",
+  brand: "#42CB74",
   lines: "#E7EBEB",
   snake: {
     eyes: "#FFFFFF",
     body: "#0A2E36"
   }
 };
+
+const appleIcon = '🍎';
 
 interface CanvasConfiguration {
   cellSize: number;
@@ -72,6 +74,7 @@ class GameUI {
   drawBackground(context: CanvasRenderingContext2D) {
     const { width, height } = this.canvas;
 
+    this.canvas.style.border = "5px solid" + COLORS.border;
     context.fillStyle = COLORS.field;
     context.fillRect(0, 0, width, height);
   }
@@ -79,7 +82,7 @@ class GameUI {
   drawBrand(context: CanvasRenderingContext2D) {
     const { width, height } = this.canvas;
 
-    context.font = height / 4 + "px Roboto";
+    context.font = height / 4 + "px Montserrat";
     context.textBaseline = "middle";
     context.textAlign = "center";
     context.fillStyle = COLORS.brand;
@@ -120,16 +123,13 @@ class GameUI {
 
   drawApples(context: CanvasRenderingContext2D) {
     const { scale, cellSize } = this.canvasConfiguration;
-    const lineWidth = 1 * scale;
-
-    context.fillStyle = COLORS.apples;
+    const appleSize = 30 * scale;
     const apples = this.game.getField().getApples();
+    context.font = appleSize + 'px serif'
     apples.forEach(cell =>
-      context.fillRect(
-        cellSize * scale * cell.x + lineWidth,
-        cellSize * scale * cell.y + lineWidth,
-        cellSize * scale - lineWidth * 2,
-        cellSize * scale - lineWidth * 2
+      context.fillText(appleIcon,
+        cellSize * scale * cell.x + cellSize,
+        cellSize * scale * cell.y + cellSize,
       )
     );
   }
