@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700');
 
 * {
     user-select: none
@@ -7,6 +7,21 @@
 body {
     margin: 0;
 }
+
+body::before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    width: 241%;
+    height: 241%;
+    left: 50%;
+    top: 50%;
+    background: url('./images/logo.svg');
+    background-color: rgb(26, 83, 36);
+    background-size: 400px 200px;
+    transform:translate(-50%,-50%) rotate(45deg);
+    opacity: 0.2;
+  }
 
 .container {
     display: flex;
