@@ -2,7 +2,6 @@
   "name": "codelex-snake",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "parcel ./static/index.html",
     "test": "jest --env=node --colors test --watch",
@@ -13,7 +12,7 @@
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "jest": "^28.1.3",
-    "parcel-bundler": "^1.12.3",
+    "parcel": "^2.7.0",
     "prettier": "2.7.1",
     "ts-jest": "^28.0.7",
     "typescript": "^4.7.4"
