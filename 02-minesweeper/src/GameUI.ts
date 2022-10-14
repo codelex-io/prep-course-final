@@ -81,15 +81,15 @@ class GameUI {
     });
     this.menuBeginner.addEventListener("click", () => {
       this.minesweeper.selectLevel(LEVELS[0]);
-      this.draw();
+      this.start();
     });
     this.menuIntermediate.addEventListener("click", () => {
       this.minesweeper.selectLevel(LEVELS[1]);
-      this.draw();
+      this.start();
     });
     this.menuExpert.addEventListener("click", () => {
       this.minesweeper.selectLevel(LEVELS[2]);
-      this.draw();
+      this.start();
     });
     this.menuMarks.addEventListener("click", () => {
       this.minesweeper.toggleQuestionMarksEnabled();
