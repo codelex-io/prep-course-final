@@ -10,7 +10,9 @@ To understand what TDD is, check out [The Three Laws of TDD @youtube.com](https:
 
 ## Getting Ready
 
-As always, open this folder in the Visual Studio Code and download all the dependencies by executing `npm install`
+As always, open this folder in the Visual Studio Code and download all the dependencies by executing `npm install`.  
+Note that you will likely need to navigate to the correct directory in terminal first as `prep-course-final` repository is actually just a container for three separate projects. `npm` commands must always be executed in the same folder as your `package.json` file. So if the terminal shows that you are in `prep-course-final` directory, navigate to `00-tic-tac-toe` directory by executing command `cd 00-tic-tac-toe`. Then you will be able to execute `npm install` successfully.  
+This step will not be necessary if you are working locally and have opened `00-tic-tac-toe` folder directly in your VS Code.
 
 ## Executing Tests
 
